@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sorry My Love</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #fff1f5, #ffe4ec, #fdf2ff);
+      overflow: hidden;
+      color: #4b2e39;
+      position: relative;
+    }
+
+    .photo-wall {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 0;
+      padding: 0;
+      z-index: 0;
+    }
+
+    .photo-wall img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 0;
+      display: block;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .heart {
+      position: absolute;
+      bottom: -40px;
+      font-size: 22px;
+      animation: floatUp linear infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(0.8);
+        opacity: 0;
+      }
+      20% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-110vh) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    .container {
+      position: relative;
+      z-index: 3;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 720px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 32px;
+      padding: 50px 32px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(255, 105, 145, 0.18);
+      animation: fadeIn 0.5s ease;
+    }
+
+    .card.final-page {
+      background: transparent;
+      backdrop-filter: none;
+      border: none;
+      box-shadow: none;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .icon {
+      width: 78px;
+      height: 78px;
+      margin: 0 auto 18px;
+      border-radius: 50%;
+      background: #ffe0ea;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      box-shadow: 0 8px 20px rgba(255, 105, 145, 0.15);
+    }
+
+    .subtitle {
+      color: #e05287;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: 20px;
+      color: #5c2f44;
+    }
+
+    .message {
+      font-size: 1.08rem;
+      line-height: 1.9;
+      color: #6b4a59;
+      max-width: 560px;
+      margin: 0 auto 32px;
+    }
+
+    .final-message-box {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.62);
+      backdrop-filter: blur(10px);
+      padding: 18px 24px;
+      border-radius: 20px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+    }
+
+    .center-btn {
+      border: none;
+      outline: none;
+      background: linear-gradient(90deg, #ff5f9e, #ff7aa8);
+      color: white;
+      padding: 16px 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(255, 105, 145, 0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      z-index: 5;
+    }
+
+    .center-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 14px 28px rgba(255, 105, 145, 0.3);
+    }
+
+    .center-btn:active {
+      transform: scale(0.98);
+    }
+
+    .progress {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 4;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: #f7bfd1;
+      transition: all 0.3s ease;
+    }
+
+    .dot.active {
+      width: 34px;
+      background: #ff5f9e;
+    }
+
+    .final-note {
+      margin-top: 18px;
+      color: #a15273;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 640px) {
+      .photo-wall {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(7, 1fr);
+        gap: 0;
+        padding: 0;
+      }
+
+      .card {
+        padding: 38px 22px;
+        border-radius: 24px;
+      }
+
+      .message {
+        font-size: 1rem;
+      }
+
+      .center-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="photoWall" class="photo-wall hidden"></div>
+  <div class="hearts" id="hearts"></div>
+  <div class="progress" id="progress"></div>
+
+  <div class="container">
+    <div class="card" id="card">
+      <div class="icon" id="pageEmoji">💗</div>
+      <div class="subtitle" id="subtitle">For My Love 💌</div>
+      <h1 id="title">Hello Miss</h1>
+      <p class="message" id="message">I want to share something with you....</p>
+      <button class="center-btn" id="nextBtn">Tap me 💌</button>
+      <div class="final-note" id="finalNote"></div>
+    </div>
+  </div>
+
+  <script>
+    const girlName = "My Love";
+
+    const photos = [
+      "img1.jpeg", "img2.jpeg", "img3.jpeg", "img4.jpeg", "img5.jpeg", "img6.jpeg", "img7.jpeg",
+      "img8.jpeg", "img9.jpeg", "img10.jpeg", "img11.jpeg", "img12.jpeg", "img13.jpeg", "img14.jpeg",
+      "img15.jpeg", "img16.jpeg", "img17.jpeg", "img18.jpeg", "img19.jpeg", "img20.jpeg", "img21.jpeg"
+    ];
+
+    const pages = [
+      {
+        emoji: "🌷",
+        title: "Hey Miss",
+        message: " I want to ask something from you....",
+        button: "Tap me 💌"
+      },
+      {
+        emoji: "🥺",
+        title: "How are you??",
+        message: "How was your day, sorry I intruded your day despite promising.",
+        button: "Read this 🥺"
+      },
+      {
+        emoji: "💞",
+        title: "You matter to me",
+        message: "You mean the world to me and I never want you to cry because of me😢. I need to ask just one thing, why did you not talk about this earlier, I would have rectified it in a breath. I always wanted you to be comfortable with me, because that is how our relationship started in the first place. I have never opened up so much before in my life, and want to be the safe place for you too.",
+        button: "One more thing ✨"
+      },
+      {
+        emoji: "🌸",
+        title: "I won't leave you",
+        message: "I never wanted to change you; if you are not the same person as I fall in love with then I am not in love with you. The only thing I ever wanted and I had promised myself on that day at Hiranandani is, I won't leave or let leave this relationship untill you feel loved the right way and are able to express it. You have been thru storms alone, those traumas are too harsh and I wish to walk your storms together. You don't need to be strong in front of me, I will never take advantage of that, never. This is my word.I realised, I don't want to be loved, I want to love you and I won't ask permission to do that. In all subtle ways I will keep loving you, alwaysss.",
+        button: "Please keep going 🌸"
+      },
+      {
+        emoji: "💕",
+        title: "Can we fall in love again?",
+        message: "I want to fall in your love more, fight more, but not against you with you and our love is true, we can overcome each and everyone of them. Yes we are different but our nature at core is the same and that what makes it interesting and worthy, we can learn a lot from each other. And in the process always become a better person.",
+        button: "One last to go 💗"
+      },
+      {
+        emoji: "💕",
+        title: "I Loveeeeeee Youuuuu",
+        message: "I won't allow you to leave me😟😫, that is for weak people and you are my strong baby girl.",
+        button: "Read again 💗",
+        final: true
+      }
+    ];
+
+    let currentPage = 0;
+
+    const title = document.getElementById("title");
+    const message = document.getElementById("message");
+    const nextBtn = document.getElementById("nextBtn");
+    const subtitle = document.getElementById("subtitle");
+    const pageEmoji = document.getElementById("pageEmoji");
+    const finalNote = document.getElementById("finalNote");
+    const progress = document.getElementById("progress");
+    const card = document.getElementById("card");
+    const photoWall = document.getElementById("photoWall");
+
+    function renderPhotos() {
+      photoWall.innerHTML = "";
+      photos.forEach((src) => {
+        const img = document.createElement("img");
+        img.src = src;
+        img.alt = "Memory photo";
+        photoWall.appendChild(img);
+      });
+    }
+
+    function renderProgress() {
+      progress.innerHTML = "";
+      pages.forEach((_, index) => {
+        const dot = document.createElement("div");
+        dot.className = "dot" + (index === currentPage ? " active" : "");
+        progress.appendChild(dot);
+      });
+    }
+
+    function renderPage() {
+      const page = pages[currentPage];
+      subtitle.textContent = `For ${girlName} ${page.emoji}`;
+      title.textContent = page.title;
+      pageEmoji.textContent = page.emoji;
+      nextBtn.textContent = page.button;
+      finalNote.textContent = page.note || "";
+
+      if (page.final) {
+        photoWall.classList.remove("hidden");
+        document.body.style.background = "none";
+        card.classList.add("final-page");
+        message.innerHTML = `<span class="final-message-box">${page.message}</span>`;
+      } else {
+        photoWall.classList.add("hidden");
+        document.body.style.background = "linear-gradient(135deg, #fff1f5, #ffe4ec, #fdf2ff)";
+        card.classList.remove("final-page");
+        message.textContent = page.message;
+      }
+
+      card.style.animation = "none";
+      void card.offsetWidth;
+      card.style.animation = "fadeIn 0.5s ease";
+
+      renderProgress();
+    }
+
+    nextBtn.addEventListener("click", () => {
+      if (currentPage < pages.length - 1) {
+        currentPage++;
+      } else {
+        currentPage = 0;
+      }
+      renderPage();
+    });
+
+    function createHearts() {
+      const hearts = document.getElementById("hearts");
+      const emojis = ["💗", "💖", "💕", "💞", "💓"];
+
+      for (let i = 0; i < 14; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.textContent = emojis[i % emojis.length];
+        heart.style.left = Math.random() * 100 + "%";
+        heart.style.animationDuration = 4 + Math.random() * 4 + "s";
+        heart.style.animationDelay = Math.random() * 4 + "s";
+        heart.style.fontSize = 18 + Math.random() * 18 + "px";
+        hearts.appendChild(heart);
+      }
+    }
+
+    createHearts();
+    renderPhotos();
+    renderPage();
+  </script>
+</body>
+</html>
